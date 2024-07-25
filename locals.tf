@@ -2,8 +2,8 @@ locals {
     ## CONDITIONS
     #   Configuration object containing boolean calculations that correspond
     #       to different deployment configurations.
-    conditions                          = {
-        # TODO: conditional calculations go here
+    conditions                      = {
+        provision_kms_key           = var.lambda.kms_key == null
     }
 
     ## <SERVICE> DEFAULTS
@@ -13,6 +13,13 @@ locals {
         # TODO: platform defaults go here
     }
     
+    lambda                              = {
+        tracing_config                  = {
+            mode                        = "PassThrough"
+        }
+        timeout                         = 100
+        reserved_concurrent_executions  = 50
+    }
     ## CALCULATED PROPERTIES
     # Variables that store local calculations
     tags                                = merge({
