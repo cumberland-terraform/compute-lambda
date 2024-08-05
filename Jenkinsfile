@@ -1,38 +1,29 @@
 pipeline {
 	agent { 
-		label 'jenkins-slave-java' 
+		label 						'jenkins-slave-java' 
 	}
 	
 	environment { 
-		TF_VER = '1.8.5'
-		OS_ARCH = 'amd64' 
-		EMAIL_LIST = 'grant.moore@maryland.gov,aaron.ramirez@maryland.gov'
-		MODULE_NAME = 'lambda'
-		TF_LOG = 'WARN'
+		BITBUCKET_KEY 				= credentials('mdtjenkinsbgit')
+		EMAIL_LIST 					= 'grant.moore@maryland.gov,aaron.ramirez@maryland.gov'
+		MODULE_NAME 				= 'lambda'
+		OS_ARCH 					= 'amd64' 
+		TF_LOG 						= 'WARN'
+		TF_VER 						= '1.8.5'
 	}
 	stages {
-			stage('Credentials') {
-				steps {
-					echo '----- Setting BitBucket Auth'
-					withCredentials([
-						file(credentialsId: 'mdtjenkinsbgit', variable: 'bitbucketsshkey')
-					]) {
-						sh '''
-							mkdir ~/.ssh
-							touch ~/.ssh/id_rsa
-							cat $(echo $bitbucketsshkey) > ~/.ssh/id_rsa
-							chmod 400 ~/.ssh/id_rsa
-							ssh-keyscan -t rsa source.mdthink.maryland.gov >> ~/.ssh/known_hosts
-						'''
-					}
-				}
-	   		}
+		stage('Credentials') {
+			steps {
+				sh 	'''
+					mkdir ~/.ssh
+					touch ~/.ssh/id_rsa
+					cat $(echo $BITBUCKET_KEY) > ~/.ssh/id_rsa
+					chmod 400 ~/.ssh/id_rsa
+					ssh-keyscan -t rsa source.mdthink.maryland.gov >> ~/.ssh/known_hosts
+				'''
+			}
+		}
 
-		/*
-		Check for Terraform and TFLint before install
-		to reduce runtime. Print versions of each for
-		documentation and pipeline debugging
-		*/
 		stage ('Dependencies') {
 			steps {
 				sh '''
@@ -40,16 +31,13 @@ pipeline {
         			unzip -o terraform_${TF_VER}_linux_${OS_ARCH}.zip
         			sudo cp -rf terraform /usr/local/bin/
         			terraform --version
-				'''
-				sh '''
+
 					curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 					tflint --version
-				'''
-				sh '''
+
 					curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
 					tfsec --version
-				'''
-				sh '''
+
 					curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-$(uname)-amd64.tar.gz
 					tar -xzf terraform-docs.tar.gz
 					chmod +x terraform-docs
@@ -86,7 +74,7 @@ pipeline {
 						--format json \
 						--no-colour \
 						--soft-fail \
-						--tfvars-file ./.ci/tests/idengr.tfvars
+						--tfvars-file ./.ci/tests/idengr.tfvars \
 							> sec.json
 					aws s3 cp sec.json s3://s3-score1-mdt-eter-pipeline/${MODULE_NAME}/sec/${BUILD_NUMBER}_sec_$(date +%s).json
 				'''
@@ -106,16 +94,16 @@ pipeline {
 			}
 		}
 
-		stage ('TF Docs') {
+		stage ('Document') {
 			steps {
 				sh '''
 					terraform-docs \
-					-c .ci/.tfdocs_md.yml .
+						-c .ci/.tfdocs_md.yml .
 					aws s3 cp tfdocs.md s3://s3-score1-mdt-eter-pipeline/${MODULE_NAME}/tfdocs/${BUILD_NUMBER}_tfdocs_$(date +%s).md
 				'''
 				sh '''
 					terraform-docs \
-					-c .ci/.tfdocs_json.yml .
+						-c .ci/.tfdocs_json.yml .
 					aws s3 cp tfdocs.json s3://s3-score1-mdt-eter-pipeline/${MODULE_NAME}/tfdocs/${BUILD_NUMBER}_tfdocs_$(date +%s).json
 				'''
 			}
