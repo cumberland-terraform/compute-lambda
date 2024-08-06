@@ -23,6 +23,7 @@ variables {
         owner                               = "AWS DevOps Team"
         availability_zones                  = [ "A01", "C01" ]
     }
+    
     lambda                                  = {
         role                                = "TEST_DATA"
     }

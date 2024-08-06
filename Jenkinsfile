@@ -61,7 +61,7 @@ pipeline {
 					tflint \
 						-f json \
 						--config .ci/.tflint.hcl \
-						> lint.json
+						| tee lint.json
 					aws s3 cp lint.json s3://s3-score1-mdt-eter-pipeline/${MODULE_NAME}/lint/${BUILD_NUMBER}_lint_$(date +%s).json
 				'''
 			}
@@ -75,7 +75,7 @@ pipeline {
 						--no-colour \
 						--soft-fail \
 						--tfvars-file ./.ci/tests/idengr.tfvars \
-							> sec.json
+						| tee sec.json
 					aws s3 cp sec.json s3://s3-score1-mdt-eter-pipeline/${MODULE_NAME}/sec/${BUILD_NUMBER}_sec_$(date +%s).json
 				'''
 			}
@@ -88,7 +88,7 @@ pipeline {
 						-no-color
 					terraform test \
 						-test-directory ./.ci/tests \
-						-json > test.json || true
+						-json | tee test.json || true
 					aws s3 cp test.json s3://s3-score1-mdt-eter-pipeline/${MODULE_NAME}/test/${BUILD_NUMBER}_test_$(date +%s).json
 				'''
 			}
