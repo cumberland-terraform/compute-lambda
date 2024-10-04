@@ -8,9 +8,24 @@ TODO
 
 The bare minimum deployment can be achieved with the following configuration,
 
+**providers.tf**
+
+```hcl
+provider "aws" {
+	alias 					= "tenant"
+	region					= "us-east-1"
+
+	assume_role {
+		role_arn 			= "arn:aws:iam::<tenant-account>:role/<role-name>"
+	}
+}
 ```
-module "<service>" {
-	source          		= "ssh://git@source.mdthink.maryland.gov:22/etm/mdt-eter-aws-core-<component>-<service>.git"
+
+**modules.tf**
+
+```
+module "lambda" {
+	source          		= "ssh://git@source.mdthink.maryland.gov:22/etm/mdt-eter-aws-core-compute-lambda.git"
 	
 	platform	                = {
 		aws_region              = "<region-name>"
@@ -24,7 +39,7 @@ module "<service>" {
                 availability_zones      = [ "<availability-zones>" ]
 	}
 
-	<service>			= {
+	lambda			        = {
         # TODO
 	}
 }
@@ -73,7 +88,7 @@ Ensure each item on the following checklist is complete before updating any tena
 - [] Open PR into `test` branch
 - [] Ensure tests are passing in Jenkins
 - [] Increment `git tag` version
-- [] Merge PR into `test`
+
 - [] Open PR from `test` into `master` branch
 - [] Get approval from lead
 - [] Merge into `master`
