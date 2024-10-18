@@ -1,7 +1,4 @@
 resource "aws_lambda_function" "this" {
-    #checkov:skip=CKV_AWS_272: "Ensure AWS Lambda function is configured to validate code-signing"
-        # TODO: sign ECR images
-
     function_name                   = var.lambda.function_name
     image_uri                       = var.lambda.image_url
     kms_key_arn                     = local.encryption_configuration.arn
@@ -31,8 +28,6 @@ resource "aws_lambda_function" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-    #checkov:skip=CKV_AWS_338: "Ensure CloudWatch log groups retains logs for at least 1 year"
-        # NOTE: checkov's a golddigger
     kms_key_id                      = local.encryption_configuration.arn
     name                            = "/aws/lambda/${var.lambda.function_name}"
     retention_in_days               = 14
