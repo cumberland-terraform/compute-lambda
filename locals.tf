@@ -6,7 +6,7 @@ locals {
         provision_key                   = var.lambda.kms_key == null
         provision_sg                    = length(var.lambda.vpc_config.security_group_ids) == 0
         is_image                        = var.lambda.package_type == "Image"
-        is_zip                          = var.lambda.package_Type == "Zip"
+        is_zip                          = var.lambda.package_type == "Zip"
     }
 
     ## LAMBDA DEFAULTS
