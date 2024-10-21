@@ -51,6 +51,18 @@ locals {
                                             arn         = data.aws_kms_key.this[0].arn
                                         })
 
+    security_group                      = {
+        suffix                          = var.lambda.suffix
+        description                     = "Security Group for Lambda"
+        inbound_rules                   = [{
+            description                 = "HTTP Ingress from self"
+            from_port                   = 0
+            to_port                     = 65535
+            protocol                    = "-1"
+            self                        = true
+        }]
+    }
+    
     security_group_ids                  = local.conditions.provision_sg ? [
                                             module.sg[0].security_group.id
                                         ] :  var.lambda.vpc_config.security_group_ids
