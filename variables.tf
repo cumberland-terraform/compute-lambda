@@ -25,9 +25,9 @@ variable "lambda" {
     runtime               = optional(string, "python3.12")
     kms_key               = optional(object({
       aws_managed         = optional(bool, false)
-      id                  = string
-      arn                 = string
-      alias_arn           = string 
+      id                  = optional(string, null)
+      arn                 = optional(string, null)
+      alias_arn           = optional(string, null) 
     }), null)
     
     environment           = optional(object({
