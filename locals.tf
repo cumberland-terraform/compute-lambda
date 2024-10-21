@@ -52,7 +52,10 @@ locals {
                                         })
 
     security_group                      = {
-        suffix                          = var.lambda.suffix
+        suffix                          = var.lambda.suffix == null ? "LAMBDA" : join("-", [
+                                            "LAMBDA",
+                                            var.lambda.suffix
+                                        ])
         description                     = "Security Group for Lambda"
         inbound_rules                   = [{
             description                 = "HTTP Ingress from self"
@@ -62,7 +65,7 @@ locals {
             self                        = true
         }]
     }
-    
+
     security_group_ids                  = local.conditions.provision_sg ? [
                                             module.sg[0].security_group.id
                                         ] :  var.lambda.vpc_config.security_group_ids
