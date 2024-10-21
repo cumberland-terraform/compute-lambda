@@ -34,6 +34,10 @@ locals {
                                             var.lambda.suffix
                                         ] : []))
 
+    kms                                 = {
+        alias_suffix                    = local.suffix
+    }
+    
     kms_key                             = local.conditions.provision_key ? (
                                             module.kms[0].key
                                         ) : !var.lambda.kms_key.aws_managed ? (
@@ -55,7 +59,7 @@ locals {
                                             "LAMBDA",
                                             var.lambda.suffix
                                         ])
-                                        
+
     security_group                      = {
         suffix                          = local.suffix
         description                     = "Security Group for Lambda"

@@ -16,9 +16,7 @@ module "kms" {
   count                 = local.conditions.provision_key ? 1 : 0
   source                = "git::ssh://git@source.mdthink.maryland.gov:22/etm/mdt-eter-core-security-kms.git?ref=v1.0.2&depth=1"
 
-  kms                   = {
-      alias_suffix      = local.suffix
-  }
+  kms                   = local.kms
   platform              = local.platform
 }
 
