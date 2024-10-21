@@ -42,12 +42,12 @@ variable "lambda" {
   })
 
   validation {
-    condition             = var.lambda.package_type == "Image" && var.lambda.image_uri != null
+    condition             = var.lambda.package_type == "Image" ? var.lambda.image_uri != null : true
     error_message         = "The Image URI must be specified if package type is Image"
   }
 
   validation {
-    condition             = var.lambda.package_type == "Zip" && var.lambda.source_file != null
+    condition             = var.lambda.package_type == "Zip" ? var.lambda.source_file != null : true
     error_message         = "The source file must be specified if package type is Zip"
   }
 }
