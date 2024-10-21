@@ -7,7 +7,7 @@ resource "aws_lambda_function" "this" {
     package_type                    = var.lambda.package_type
     publish                         = local.platform_defaults.publish
     source_code_hash                = local.source_code_hash
-    role                            = var.lambda.role
+    role                            = local.role
     timeout                         = var.lambda.timeout
     reserved_concurrent_executions  = local.platform_defaults.reserved_concurrent_executions
     
