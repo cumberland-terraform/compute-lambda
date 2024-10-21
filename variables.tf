@@ -5,6 +5,7 @@ variable "platform" {
     account               = string
     acct_env              = string
     agency                = string
+    app                   = string
     program               = string
     availability_zones    = list(string)
     pca                   = string
