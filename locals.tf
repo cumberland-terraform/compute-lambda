@@ -51,11 +51,13 @@ locals {
                                             arn         = data.aws_kms_key.this[0].arn
                                         })
 
-    security_group                      = {
-        suffix                          = var.lambda.suffix == null ? "LAMBDA" : join("-", [
+    suffix                              = var.lambda.suffix == null ? "LAMBDA" : join("-", [
                                             "LAMBDA",
                                             var.lambda.suffix
                                         ])
+                                        
+    security_group                      = {
+        suffix                          = local.suffix
         description                     = "Security Group for Lambda"
         inbound_rules                   = [{
             description                 = "HTTP Ingress from self"

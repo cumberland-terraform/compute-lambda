@@ -17,10 +17,7 @@ module "kms" {
   source                = "git::ssh://git@source.mdthink.maryland.gov:22/etm/mdt-eter-core-security-kms.git?ref=v1.0.2&depth=1"
 
   kms                   = {
-      alias_suffix      = var.lambda.suffix == null ? "LAMBDA" : join("-", [
-                          "LAMBDA",
-                          var.lambda.suffix
-                        ])
+      alias_suffix      = local.suffix
   }
   platform              = local.platform
 }
