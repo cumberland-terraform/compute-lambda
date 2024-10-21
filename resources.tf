@@ -16,7 +16,7 @@ resource "aws_lambda_function" "this" {
     }
 
     environment {
-        variables                   = var.lambda.environment_variables
+        variables                   = var.lambda.environment.variables
     }
 
     vpc_config {
