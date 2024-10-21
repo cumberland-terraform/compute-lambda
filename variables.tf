@@ -18,13 +18,25 @@ variable "lambda" {
   description             = "todo"
   type                    = object({
     role                  = string
+
     environment           = optional(object({
       variables           = map(any)
     }))
-    memory                = optional(number, 512)
+
+    vpc_config            = optional(object({
+      security_group_ids  = optional(list(string), null)
+    }), {
+      security_group_ids  = []
+    })
+
+    memory_size           = optional(number, 512)
+    timeout               = optional(number, 100)
+    
     kms_key               = optional(object({
+      aws_managed         = optional(bool, false)
       id                  = string
       arn                 = string
+      alias_arn           = string 
     }), null)
   })
 }
