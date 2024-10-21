@@ -26,7 +26,7 @@ locals {
     filename                            = local.conditions.is_zip ? "${path.module}/src/payload.zip" : null
     source_code_hash                    = local.conditions.is_zip ? (
                                             data.archive_file.this[0].output_base64sha256 
-                                        ): null
+                                        ) : null
 
     function_name                       = join("-", concat([
                                             module.platform.prefixes.lambda.function,
