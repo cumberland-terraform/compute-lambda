@@ -2,9 +2,11 @@ locals {
     ## CONDITIONS
     #   Configuration object containing boolean calculations that correspond
     #       to different deployment configurations.
-    conditions                      = {
-        provision_key               = var.lambda.kms_key == null
-        provision_sg                = length(var.lambda.vpc_config.security_group_ids) == 0
+    conditions                          = {
+        provision_key                   = var.lambda.kms_key == null
+        provision_sg                    = length(var.lambda.vpc_config.security_group_ids) == 0
+        is_image                        = var.lambda.package_type == "Image"
+        is_zip                          = var.lambda.package_Type == "Zip"
     }
 
     ## LAMBDA DEFAULTS
@@ -15,11 +17,23 @@ locals {
             mode                        = "PassThrough"
         }
         reserved_concurrent_executions  = 50
+        publish                         = true
         aws_managed_key_alias           = "alias/aws/lambda"
     }
     
     ## CALCULATED PROPERTIES
     #   Properties that change based on deployment configurations
+    filename                            = local.conditions.is_zip ? "${path.module}/src/payload.zip" : null
+    source_code_hash                    = local.conditions.is_zip ? (
+                                            data.archive_file.this[0].output_base64sha256 
+                                        ): null
+
+    function_name                       = join("-", concat([
+                                            module.platform.prefixes.lambda.function,
+                                        ], var.lambda.suffix != null ? [
+                                            var.lambda.suffix
+                                        ] : []))
+
     kms_key                             = local.conditions.provision_key ? (
                                             module.kms[0].key
                                         ) : !var.lambda.kms_key.aws_managed ? (
@@ -42,11 +56,11 @@ locals {
                                         ] :  var.lambda.vpc_config.security_group_ids
     
     platform                            = merge({
-        # TODO: service specific platform arugments go here
+        subnet_type                     = "NETWORK ADDRESS TRANSLATION"
     }, var.platform)
 
     tags                                = merge({
-        # TODO: service specific tags go here
+       Name                             = local.function_name
     }, module.platform.tags)
 
 
