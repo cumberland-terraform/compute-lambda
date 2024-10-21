@@ -12,7 +12,7 @@ resource "aws_lambda_function" "this" {
     reserved_concurrent_executions  = local.platform_defaults.reserved_concurrent_executions
     
     tracing_config {
-        mode                        = local.lambda.tracing_config.mode
+        mode                        = local.platform_defaults.tracing_config.mode
     }
 
     environment {
