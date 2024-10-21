@@ -77,6 +77,12 @@ locals {
                                             module.sg[0].security_group.id
                                         ] :  var.lambda.vpc_config.security_group_ids
     
+    role                                = var.lambda.role == null ? (
+                                            # TODO: if this is the platform lambda role, it should be pulled
+                                            #       from the platform module!
+                                            "${module.platform.aws.arn.iam.role}/IMR-MDT-COST-LAMBDA"
+                                        ) : var.lambda.role
+
     platform                            = merge({
         subnet_type                     = "NETWORK ADDRESS TRANSLATION"
     }, var.platform)

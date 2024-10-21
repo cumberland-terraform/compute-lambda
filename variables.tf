@@ -15,7 +15,7 @@ variable "platform" {
 variable "lambda" {
   description             = "todo"
   type                    = object({
-    role                  = optional(string, "IMR-MDT-COST-LAMBDA")
+    role                  = optional(string, null)
     suffix                = optional(string, null)
     package_type          = optional(string, "Image")
     image_uri             = optional(string, null)
