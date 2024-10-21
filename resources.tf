@@ -9,6 +9,8 @@ resource "aws_lambda_function" "this" {
     source_code_hash                = local.source_code_hash
     role                            = local.role
     timeout                         = var.lambda.timeout
+    runtime                         = local.runtime
+    handler                         = local.handler
     reserved_concurrent_executions  = local.platform_defaults.reserved_concurrent_executions
     
     tracing_config {

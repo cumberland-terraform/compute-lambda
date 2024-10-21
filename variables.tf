@@ -23,6 +23,7 @@ variable "lambda" {
     memory_size           = optional(number, 512)
     timeout               = optional(number, 100)
     runtime               = optional(string, "python3.12")
+    handler               = optional(string, "lambda_function.lambda_handler")
     kms_key               = optional(object({
       aws_managed         = optional(bool, false)
       id                  = optional(string, null)

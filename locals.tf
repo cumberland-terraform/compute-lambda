@@ -77,6 +77,8 @@ locals {
                                             module.sg[0].security_group.id
                                         ] :  var.lambda.vpc_config.security_group_ids
     
+    runtime                             = local.conditions.is_zip ? var.lambda.runtime : null
+    handler                             = local.conditions.is_zip ? var.lambda.handler : null
     role                                = var.lambda.role == null ? (
                                             # TODO: if this is the platform lambda role, it should be pulled
                                             #       from the platform module!
