@@ -24,6 +24,7 @@ locals {
     ## CALCULATED PROPERTIES
     #   Properties that change based on deployment configurations
     filename                            = local.conditions.is_zip ? "${path.module}/src/payload.zip" : null
+    
     source_code_hash                    = local.conditions.is_zip ? (
                                             data.archive_file.this[0].output_base64sha256 
                                         ) : null
@@ -37,7 +38,7 @@ locals {
     kms                                 = {
         alias_suffix                    = local.suffix
     }
-    
+
     kms_key                             = local.conditions.provision_key ? (
                                             module.kms[0].key
                                         ) : !var.lambda.kms_key.aws_managed ? (
