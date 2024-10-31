@@ -12,6 +12,7 @@ resource "aws_lambda_function" "this" {
     runtime                         = local.runtime
     handler                         = local.handler
     reserved_concurrent_executions  = local.platform_defaults.reserved_concurrent_executions
+    tags                            = local.tags
     
     tracing_config {
         mode                        = local.platform_defaults.tracing_config.mode
@@ -31,4 +32,5 @@ resource "aws_cloudwatch_log_group" "this" {
     kms_key_id                      = local.kms_key.arn
     name                            = "/aws/lambda/${local.function_name}"
     retention_in_days               = 14
+    tags                            = local.tags
 }

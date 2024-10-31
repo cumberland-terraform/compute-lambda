@@ -89,6 +89,9 @@ locals {
         subnet_type                     = "NETWORK ADDRESS TRANSLATION"
     }, var.platform)
 
+    tags                                = merge({
+       Name                             = local.function_name
+    }, module.platform.tags)
 
 
 }
