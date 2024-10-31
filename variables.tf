@@ -40,6 +40,8 @@ variable "lambda" {
     }), {
       security_group_ids  = []
     })
+
+    logging               = optional(bool, false)
   })
 
   validation {
