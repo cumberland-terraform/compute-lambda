@@ -34,11 +34,14 @@ resource "aws_lambda_function" "this" {
 
 resource "aws_cloudwatch_log_group" "this" {
     count                           = var.lambda.logging ? 1 : 0
-
+    
+    lifecycle {
+      ignore_changes                = [ tags ]
+    }
     # TODO: need to find out which AWS managed key to use with Cloudwatch
     # kms_key_id                      = local.kms_key.arn
     
     name                            = "/aws/lambda/${local.function_name}"
-    retention_in_days               = 14
+    retention_in_days               = local.platform_defaults.retention_in_days
     tags                            = local.tags
 }
