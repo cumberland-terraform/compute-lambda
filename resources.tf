@@ -1,4 +1,8 @@
 resource "aws_lambda_function" "this" {
+    lifecycle {
+      ignore_changes                = [ tags ]
+    }
+    
     function_name                   = local.function_name
     filename                        = local.filename
     image_uri                       = var.lambda.image_uri
