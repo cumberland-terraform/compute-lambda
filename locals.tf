@@ -87,7 +87,7 @@ locals {
                                         ) : var.lambda.role
 
     platform                            = merge({
-        subnet_type                     = "NETWORK ADDRESS TRANSLATION"
+        subnet_type                     = "PRIVATE"
     }, var.platform)
 
     tags                                = merge({
