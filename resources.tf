@@ -38,7 +38,7 @@ resource "aws_lambda_function" "this" {
                                         ) : toset([0])
         
         content {
-            subnet_ids                  = module.platform.network.subnets.ids
+            subnet_ids                  = try(module.platform.network.subnets.ids, null)
             security_group_ids          = local.security_group_ids
         }
     }
