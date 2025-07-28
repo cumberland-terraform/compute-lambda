@@ -22,13 +22,25 @@ resource "aws_lambda_function" "this" {
         mode                        = local.platform_defaults.tracing_config.mode
     }
 
-    environment {
-        variables                   = var.lambda.environment.variables
+    dynamic "environment" {
+        for_each                        = try(var.lambda.environment.variables, null) == null ? (
+                                          toset([]) 
+                                        ) : toset([1])
+        
+        content {
+            variables                 = environment.value["variables"]
+        }
     }
 
-    vpc_config {
-        subnet_ids                  = module.platform.network.subnets.ids
-        security_group_ids          = local.security_group_ids
+    dynamic "vpc_config" {
+        for_each                        = local.conditions.provision_sg ? (
+                                          toset([1]) 
+                                        ) : toset([0])
+        
+        content {
+            subnet_ids                  = module.platform.network.subnets.ids
+            security_group_ids          = local.security_group_ids
+        }
     }
 }
 
