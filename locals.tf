@@ -31,7 +31,7 @@ locals {
                                         ) : null
 
     function_name                       = join("-", concat([
-                                            module.platform.prefixes.compute.lambda.function,
+                                            module.platform.prefix,
                                         ], var.lambda.suffix != null ? [
                                             var.lambda.suffix
                                         ] : []))
