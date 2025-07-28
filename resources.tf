@@ -35,7 +35,7 @@ resource "aws_lambda_function" "this" {
     dynamic "vpc_config" {
         for_each                        = local.conditions.provision_sg ? (
                                           toset([1]) 
-                                        ) : toset([0])
+                                        ) : toset([])
         
         content {
             subnet_ids                  = try(module.platform.network.subnets.ids, null)
