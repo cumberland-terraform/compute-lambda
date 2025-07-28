@@ -3,7 +3,7 @@ locals {
     #   Configuration object containing boolean calculations that correspond
     #       to different deployment configurations.
     conditions                          = {
-        provision_key                   = var.lambda.kms_key == null
+        provision_key                   = var.kms == null
         provision_sg                    = length(var.lambda.vpc_config.security_group_ids) == 0
         is_image                        = var.lambda.package_type == "Image"
         is_zip                          = var.lambda.package_type == "Zip"
@@ -42,8 +42,8 @@ locals {
 
     kms_key                             = local.conditions.provision_key ? (
                                             module.kms[0].key
-                                        ) : !var.lambda.kms_key.aws_managed ? (
-                                            var.lambda.kms_key
+                                        ) : !var.kms.aws_managed ? (
+                                            var.kms
                                         ) :  merge({
                                             # NOTE: the different objects on either side of the ? ternary operator
                                             #       have to match type, so hacking the types together.

@@ -18,13 +18,6 @@ variable "lambda" {
     timeout               = optional(number, 100)
     runtime               = optional(string, "python3.12")
     handler               = optional(string, "lambda_function.lambda_handler")
-    kms_key               = optional(object({
-      aws_managed         = optional(bool, false)
-      id                  = optional(string, null)
-      arn                 = optional(string, null)
-      alias_arn           = optional(string, null) 
-    }), null)
-    
     environment           = optional(object({
       variables           = map(any)
     }), null)
@@ -47,4 +40,15 @@ variable "lambda" {
     condition             = var.lambda.package_type == "Zip" ? var.lambda.source_file != null : true
     error_message         = "The source file must be specified if package type is Zip"
   }
+}
+
+variable "kms" {
+  description                   = "KMS Key configuration object. If not provided, a key will be provisioned. An AWS managed key can be used by specifying `aws_managed = true`."
+  type                          = object({
+    aws_managed                 = optional(bool, false)
+    id                          = optional(string, null)
+    arn                         = optional(string, null)
+    alias_arn                   = optional(string, null)
+  })
+  default                       = null
 }
