@@ -4,7 +4,9 @@ locals {
     #       to different deployment configurations.
     conditions                          = {
         provision_key                   = var.kms == null
-        provision_sg                    = length(var.lambda.vpc_config.security_group_ids) == 0
+        provision_sg                    = false
+        # TODO: parameterize this functionality better
+        # provision_sg                    = length(var.lambda.vpc_config.security_group_ids) == 0
         is_image                        = var.lambda.package_type == "Image"
         is_zip                          = var.lambda.package_type == "Zip"
     }
