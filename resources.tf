@@ -15,7 +15,6 @@ resource "aws_lambda_function" "this" {
     timeout                         = var.lambda.timeout
     runtime                         = local.runtime
     handler                         = local.handler
-    reserved_concurrent_executions  = local.platform_defaults.reserved_concurrent_executions
     tags                            = local.tags
     
     tracing_config {

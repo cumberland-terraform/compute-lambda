@@ -18,7 +18,6 @@ locals {
         tracing_config                  = {
             mode                        = "PassThrough"
         }
-        reserved_concurrent_executions  = 5
         publish                         = true
         aws_managed_key_alias           = "alias/aws/lambda"
         retention_in_days               = 14
